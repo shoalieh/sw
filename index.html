@@ -10,7 +10,7 @@
 <body>
 
 <div id="offline-message" style="display:none; background-color: #f44336; color: white; text-align: center; padding: 10px;">
-    شما آفلاین هستید. لطفاً اتصال اینترنت خود را بررسی کنید.
+    شما آفلاین هستید. این محتوا از کش برگرفته شده است.
 </div>
 
 <div id="main-content" style="text-align: center; padding: 20px;">
@@ -45,6 +45,13 @@
     // اضافه کردن Event Listener برای بررسی وضعیت آنلاین/آفلاین
     window.addEventListener('online', hideOfflineMessage);
     window.addEventListener('offline', showOfflineMessage);
+
+    // اجرای تابع نمایش پیام آفلاین هنگام بارگذاری صفحه
+    document.addEventListener('DOMContentLoaded', function () {
+        if (!navigator.onLine) {
+            showOfflineMessage();
+        }
+    });
 </script>
 
 </body>
