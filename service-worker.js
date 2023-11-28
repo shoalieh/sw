@@ -3,9 +3,7 @@ self.addEventListener('install', function (event) {
     event.waitUntil(
         caches.open('offline-cache').then(function (cache) {
             return cache.addAll([
-                '/',
-                '/index.html'
-                // افزودن فایل‌های دیگر به دلخواه
+                'https://shoalieh.github.io/sw/index.html'
             ]);
         })
     );
