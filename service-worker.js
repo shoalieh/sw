@@ -1,17 +1,13 @@
 // service-worker.js
 
-const CACHE_NAME = "offline-cache1";
-const OFFLINE_URL = "/offline-notification.html";
-const ONLINE_URL = "/online.html";
-const HOME_URL = "/index.html";
+const CACHE_NAME = "offline-cache";
+const OFFLINE_URL = "/offline.html";
 const NOTIFICATION_WORKER_PATH = "/notification-worker.js";
-
-let isOffline = false;
 
 self.addEventListener("install", (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll([OFFLINE_URL, ONLINE_URL, HOME_URL]);
+            return cache.addAll([OFFLINE_URL]);
         })
     );
     self.skipWaiting();
@@ -34,21 +30,7 @@ self.addEventListener("fetch", (event) => {
     }
 });
 
-self.addEventListener("online", () => {
-    isOffline = false;
-    clients.matchAll({ type: "window" }).then((clients) => {
-        clients.forEach((client) => {
-            if (client.url === self.location.href && !isOffline) {
-                if (!client.url.includes(HOME_URL)) {
-                    client.navigate(ONLINE_URL);
-                }
-            }
-        });
-    });
-});
-
-self.addEventListener("offline", () => {
-    isOffline = true;
+self.addEventListener("offline", (event) => {
     clients.matchAll({ type: "window" }).then((clients) => {
         clients.forEach((client) => {
             if (client.url === self.location.href) {
@@ -66,7 +48,7 @@ self.addEventListener("offline", () => {
 
 self.addEventListener("activate", (event) => {
     event.waitUntil(
-        self.clients.claim()
+        navigator.serviceWorker.register(NOTIFICATION_WORKER_PATH)
     );
 });
 
@@ -74,10 +56,4 @@ self.addEventListener("message", (event) => {
     if (event.data && event.data.type === "SKIP_WAITING") {
         self.skipWaiting();
     }
-});
-
-self.addEventListener("activate", (event) => {
-    event.waitUntil(
-        navigator.serviceWorker.register(NOTIFICATION_WORKER_PATH)
-    );
 });
