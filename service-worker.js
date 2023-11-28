@@ -1,6 +1,6 @@
 // service-worker.js
 
-const CACHE_NAME = "offline-cache";
+const CACHE_NAME = "offline-cache1";
 const OFFLINE_URL = "/offline-notification.html";
 const ONLINE_URL = "/online.html";
 const HOME_URL = "/index.html";
