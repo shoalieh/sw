@@ -3,33 +3,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            text-align: center;
-            padding: 20px;
-        }
-        h1 {
-            color: #333;
-        }
-    </style>
+    <title>آفلاین/آنلاین Checker با استفاده از Service Worker</title>
 </head>
 <body>
-    <h1>Welcome to the Home Page</h1>
-    <p>Feel free to explore the content.</p>
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js')
-                .then((registration) => {
-                    console.log('Service Worker registered with scope:', registration.scope);
-                })
-                .catch((error) => {
-                    console.error('Service Worker registration failed:', error);
-                });
-        }
-    </script>
+
+<div id="offline-message" style="display:none; background-color: #f44336; color: white; text-align: center; padding: 10px;">
+    شما آفلاین هستید. لطفاً اتصال اینترنت خود را بررسی کنید.
+</div>
+
+<div id="main-content" style="text-align: center; padding: 20px;">
+    <h1>سلام! به سایت خوش آمدید</h1>
+    <p>این محتوا فقط در حالت آنلاین قابل مشاهده است.</p>
+</div>
+
+<script>
+    // ثبت Service Worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(function (registration) {
+                console.log('Service Worker registered with scope:', registration.scope);
+            })
+            .catch(function (error) {
+                console.error('Service Worker registration failed:', error);
+            });
+    }
+
+    // تابع نمایش/عدم نمایش پیام آفلاین
+    function showOfflineMessage() {
+        var offlineMessage = document.getElementById('offline-message');
+        offlineMessage.style.display = 'block';
+    }
+
+    // تابع پنهان کردن پیام آفلاین
+    function hideOfflineMessage() {
+        var offlineMessage = document.getElementById('offline-message');
+        offlineMessage.style.display = 'none';
+    }
+
+    // اضافه کردن Event Listener برای بررسی وضعیت آنلاین/آفلاین
+    window.addEventListener('online', hideOfflineMessage);
+    window.addEventListener('offline', showOfflineMessage);
+</script>
+
 </body>
 </html>
